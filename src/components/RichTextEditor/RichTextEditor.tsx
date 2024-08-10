@@ -108,7 +108,7 @@ const RichTextEditor: React.FC = () => {
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           placeholder="Enter some rich text…"
-          className="mt-4 rounded-md border p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="prose mt-4 rounded-md border p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
           spellCheck
           autoFocus
           onKeyDown={(event) => {
