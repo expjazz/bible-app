@@ -24,8 +24,9 @@ import {
   MdFormatAlignRight,
   MdFormatAlignJustify,
 } from "react-icons/md";
+import { CustomElement } from "~/types/slate";
 
-const HOTKEYS: { [key: string]: string } = {
+const HOTKEYS: Record<string, string> = {
   "mod+b": "bold",
   "mod+i": "italic",
   "mod+u": "underline",
@@ -36,12 +37,21 @@ const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
 const RichTextEditor: React.FC = () => {
-  const renderElement = useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+  const renderElement = useCallback(
+    (props: LocalElementPops) => <Element {...props} />,
+    [],
+  );
+  const renderLeaf = useCallback(
+    (props: LocalLeafPops) => <Leaf {...props} />,
+    [],
+  );
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
-    <Slate editor={editor} initialValue={initialValue}>
+    <Slate
+      editor={editor}
+      initialValue={initialValue as unknown as Descendant[]}
+    >
       <Toolbar>
         <MarkButton format="bold" icon={<MdFormatBold />} />
         <MarkButton format="italic" icon={<MdFormatItalic />} />
@@ -65,9 +75,10 @@ const RichTextEditor: React.FC = () => {
         autoFocus
         onKeyDown={(event) => {
           for (const hotkey in HOTKEYS) {
-            if (isHotkey(hotkey, event as any)) {
+            if (isHotkey(hotkey, event)) {
               event.preventDefault();
               const mark = HOTKEYS[hotkey];
+              if (!mark) return;
               toggleMark(editor, mark);
             }
           }
@@ -76,6 +87,12 @@ const RichTextEditor: React.FC = () => {
     </Slate>
   );
 };
+
+type OmiteCustomElement = Omit<CustomElement, "type">;
+interface NewProperties extends Partial<OmiteCustomElement> {
+  type?: string;
+  align?: string;
+}
 
 const toggleBlock = (editor: Editor, format: string) => {
   const isActive = isBlockActive(
@@ -93,7 +110,7 @@ const toggleBlock = (editor: Editor, format: string) => {
       !TEXT_ALIGN_TYPES.includes(format),
     split: true,
   });
-  let newProperties: Partial<SlateElement>;
+  let newProperties: NewProperties;
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
       align: isActive ? undefined : format,
@@ -103,11 +120,11 @@ const toggleBlock = (editor: Editor, format: string) => {
       type: isActive ? "paragraph" : isList ? "list-item" : format,
     };
   }
-  Transforms.setNodes<SlateElement>(editor, newProperties);
+  Transforms.setNodes(editor, newProperties);
 
   if (!isActive && isList) {
     const block = { type: format, children: [] };
-    Transforms.wrapNodes(editor, block);
+    Transforms.wrapNodes(editor, block as unknown as CustomElement);
   }
 };
 
@@ -131,7 +148,7 @@ const isBlockActive = (editor: Editor, format: string, blockType = "type") => {
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        n[blockType] === format,
+        (n as unknown as Record<string, string>)[blockType] === format,
     }),
   );
 
@@ -140,11 +157,29 @@ const isBlockActive = (editor: Editor, format: string, blockType = "type") => {
 
 const isMarkActive = (editor: Editor, format: string) => {
   const marks = Editor.marks(editor);
-  return marks ? marks[format] === true : false;
+  return marks
+    ? (marks as unknown as Record<string, boolean>)[format] === true
+    : false;
 };
 
-const Element: React.FC<any> = ({ attributes, children, element }) => {
-  const style = { textAlign: element.align };
+type LocalElementPops = {
+  attributes: React.HTMLAttributes<HTMLElement>;
+  children: React.ReactNode;
+  element: {
+    type: string;
+    align?: string;
+  };
+};
+
+const Element: React.FC<{
+  attributes: React.HTMLAttributes<HTMLElement>;
+  children: React.ReactNode;
+  element: {
+    type: string;
+    align?: string;
+  };
+}> = ({ attributes, children, element }) => {
+  const style = { textAlign: element.align } as React.CSSProperties;
   switch (element.type) {
     case "block-quote":
       return (
@@ -191,7 +226,18 @@ const Element: React.FC<any> = ({ attributes, children, element }) => {
   }
 };
 
-const Leaf: React.FC<any> = ({ attributes, children, leaf }) => {
+type LocalLeafPops = {
+  attributes: Record<string, boolean>;
+  children: React.ReactNode;
+  leaf: {
+    bold?: boolean;
+    code?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+  };
+};
+
+const Leaf: React.FC<LocalLeafPops> = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
@@ -259,43 +305,24 @@ const MarkButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
   );
 };
 
-const Toolbar: React.FC = ({ children }) => {
+const Toolbar: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   return <div>{children}</div>;
 };
 
-const initialValue: Descendant[] = [
+const initialValue = [
   {
     type: "paragraph",
     children: [
       { text: "This is editable " },
       { text: "rich", bold: true },
       { text: " text, " },
-      { text: "much", italic: true },
+      { text: "much" },
       { text: " better than a " },
-      { text: "<textarea>", code: true },
+      { text: "<textarea>" },
       { text: "!" },
     ],
-  },
-  {
-    type: "paragraph",
-    children: [
-      {
-        text: "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: "bold", bold: true },
-      {
-        text: ", or add a semantically rendered block quote in the middle of the page, like this:",
-      },
-    ],
-  },
-  {
-    type: "block-quote",
-    children: [{ text: "A wise quote." }],
-  },
-  {
-    type: "paragraph",
-    align: "center",
-    children: [{ text: "Try it out for yourself!" }],
   },
 ];
 

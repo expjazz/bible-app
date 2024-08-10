@@ -16,7 +16,7 @@ export type HeadingElement = {
   children: CustomText[]
 }
 
-export type CustomElement = ParagraphElement | HeadingElement
+export interface CustomElement extends ParagraphElement, HeadingElement {}
 
 export type FormattedText = { text: string; bold?: true }
 
