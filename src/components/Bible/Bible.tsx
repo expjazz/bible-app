@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import { text } from "stream/consumers";
 import useClickOutside from "~/utils/useClickOutside";
+import { MdClose } from "react-icons/md";
 
 interface BibleContentProps {
   books: Book[];
@@ -49,10 +50,6 @@ const BookContent = ({
         </h1>
       </div>
 
-      {/* <Popover>
-        <PopoverAnchor virtualRef={textSelectionRef.current} />
-        <PopoverContent>Place content for the popover here.</PopoverContent>
-      </Popover> */}
       <div className="my-4">
         <Label>Mudar de livro</Label>
         <SimpleSelect
@@ -99,6 +96,12 @@ const BookContent = ({
                 </PopoverAnchor>
                 <PopoverContent>
                   <p>{verse.text}</p>
+                  <button
+                    onClick={() => setSelectedVerse(undefined)}
+                    className="rounded-md bg-white p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  >
+                    <MdClose className="" />
+                  </button>
                 </PopoverContent>
               </Popover>
             ) : (
