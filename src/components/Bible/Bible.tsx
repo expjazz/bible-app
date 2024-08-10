@@ -95,13 +95,15 @@ const BookContent = ({
                   </span>
                 </PopoverAnchor>
                 <PopoverContent>
-                  <p>{verse.text}</p>
-                  <button
-                    onClick={() => setSelectedVerse(undefined)}
-                    className="rounded-md bg-white p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                  >
-                    <MdClose className="" />
-                  </button>
+                  <div className="px-4">
+                    <p>{verse.text}</p>
+                    <button
+                      onClick={() => setSelectedVerse(undefined)}
+                      className="rounded-md bg-white p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    >
+                      <MdClose className="" />
+                    </button>
+                  </div>
                 </PopoverContent>
               </Popover>
             ) : (
