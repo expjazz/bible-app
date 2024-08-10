@@ -13,13 +13,6 @@ const BookContent = ({ book }: { book: Book }) => {
     chapter,
     version: "nvi",
   });
-  if (isLoading || !verseData) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
 
   console.log("verseData", verseData);
   return (
@@ -49,7 +42,7 @@ const BookContent = ({ book }: { book: Book }) => {
         </select>
       </div>
       <div className="space-y-6">
-        {verseData.verses.map((verse) => (
+        {verseData?.verses.map((verse) => (
           <div key={verse.number} className="flex items-start space-x-3">
             <span className="text-xl font-bold text-gray-700">
               {verse.number}
