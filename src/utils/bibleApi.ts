@@ -27,7 +27,7 @@ export const getVerse = async({
   version = "nvi",
 }: verseProps) =>
 {
-  const response = await bibleAxiosClient.get<Verse>(`/verses/${version}/${book.abbrev.pt}/${chapter}`);
+  const response = await bibleAxiosClient.get<GetChapterResponse>(`/verses/${version}/${book.abbrev.pt}/${chapter}`);
   return response.data;
 }
 

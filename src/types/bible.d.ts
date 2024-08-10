@@ -68,12 +68,9 @@ interface GetBookResponse {
 }
 
 interface GetChapterResponse {
-  200: {
-    book: Book;
-    chapter: Chapter;
-    verses: Verse[];
-  };
-  409: RateLimitResponse;
+  book: Book;
+  chapter: Chapter;
+  verses: Verse[];
 }
 
 interface GetVerseResponse {

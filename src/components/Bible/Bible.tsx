@@ -13,16 +13,75 @@ const BookContent = ({ book }: { book: Book }) => {
     version: "nvi",
   });
   if (isLoading || !verseData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   }
-  return <div className="">reading {book.name}</div>;
+
+  console.log("verseData", verseData);
+  return (
+    <div className="mx-auto max-w-3xl p-4">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold uppercase">
+          {book.name} {chapter}
+        </h1>
+      </div>
+      <div className="mb-4">
+        <label htmlFor="chapter" className="block text-gray-700">
+          Select Chapter:
+        </label>
+        <select
+          id="chapter"
+          value={chapter}
+          onChange={(e) => setChapter(Number(e.target.value))}
+          className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          {Array.from({ length: book.chapters }, (_, i) => i + 1).map(
+            (chap) => (
+              <option key={chap} value={chap}>
+                {chap}
+              </option>
+            ),
+          )}
+        </select>
+      </div>
+      <div className="space-y-6">
+        {verseData.verses.map((verse) => (
+          <div key={verse.number} className="flex items-start space-x-3">
+            <span className="text-xl font-bold text-gray-700">
+              {verse.number}
+            </span>
+            <p className="text-lg leading-relaxed">{verse.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-8 flex justify-between">
+        <button
+          onClick={() => setChapter(chapter - 1)}
+          disabled={chapter <= 1}
+          className="rounded-lg bg-indigo-500 px-4 py-2 text-white disabled:bg-gray-400"
+        >
+          Previous Chapter
+        </button>
+        <button
+          onClick={() => setChapter(chapter + 1)}
+          disabled={chapter >= book.chapters}
+          className="rounded-lg bg-indigo-500 px-4 py-2 text-white disabled:bg-gray-400"
+        >
+          Next Chapter
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const BibleContent = ({ books }: BibleContentProps) => {
   console.log("books", books);
   const [book, setBook] = useState<Book | undefined>();
   if (book) {
-    return <div className="">reading {book.name}</div>;
+    return <BookContent book={book} />;
   }
   return (
     <div className="h-[800px] overflow-auto p-4">
