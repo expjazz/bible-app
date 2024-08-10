@@ -9,6 +9,21 @@ import {
   Element as SlateElement,
 } from "slate";
 import { withHistory } from "slate-history";
+import {
+  MdFormatBold,
+  MdFormatItalic,
+  MdFormatUnderlined,
+  MdCode,
+  MdLooksOne,
+  MdLooksTwo,
+  MdFormatQuote,
+  MdFormatListNumbered,
+  MdFormatListBulleted,
+  MdFormatAlignLeft,
+  MdFormatAlignCenter,
+  MdFormatAlignRight,
+  MdFormatAlignJustify,
+} from "react-icons/md";
 
 const HOTKEYS: { [key: string]: string } = {
   "mod+b": "bold",
@@ -28,19 +43,19 @@ const RichTextEditor: React.FC = () => {
   return (
     <Slate editor={editor} initialValue={initialValue}>
       <Toolbar>
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <MarkButton format="underline" icon="format_underlined" />
-        <MarkButton format="code" icon="code" />
-        <BlockButton format="heading-one" icon="looks_one" />
-        <BlockButton format="heading-two" icon="looks_two" />
-        <BlockButton format="block-quote" icon="format_quote" />
-        <BlockButton format="numbered-list" icon="format_list_numbered" />
-        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-        <BlockButton format="left" icon="format_align_left" />
-        <BlockButton format="center" icon="format_align_center" />
-        <BlockButton format="right" icon="format_align_right" />
-        <BlockButton format="justify" icon="format_align_justify" />
+        <MarkButton format="bold" icon={<MdFormatBold />} />
+        <MarkButton format="italic" icon={<MdFormatItalic />} />
+        <MarkButton format="underline" icon={<MdFormatUnderlined />} />
+        <MarkButton format="code" icon={<MdCode />} />
+        <BlockButton format="heading-one" icon={<MdLooksOne />} />
+        <BlockButton format="heading-two" icon={<MdLooksTwo />} />
+        <BlockButton format="block-quote" icon={<MdFormatQuote />} />
+        <BlockButton format="numbered-list" icon={<MdFormatListNumbered />} />
+        <BlockButton format="bulleted-list" icon={<MdFormatListBulleted />} />
+        <BlockButton format="left" icon={<MdFormatAlignLeft />} />
+        <BlockButton format="center" icon={<MdFormatAlignCenter />} />
+        <BlockButton format="right" icon={<MdFormatAlignRight />} />
+        <BlockButton format="justify" icon={<MdFormatAlignJustify />} />
       </Toolbar>
       <Editable
         renderElement={renderElement}
@@ -196,7 +211,7 @@ const Leaf: React.FC<any> = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const BlockButton: React.FC<{ format: string; icon: string }> = ({
+const BlockButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
   format,
   icon,
 }) => {
@@ -223,7 +238,7 @@ const BlockButton: React.FC<{ format: string; icon: string }> = ({
   );
 };
 
-const MarkButton: React.FC<{ format: string; icon: string }> = ({
+const MarkButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
   format,
   icon,
 }) => {
