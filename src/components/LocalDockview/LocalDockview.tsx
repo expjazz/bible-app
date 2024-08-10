@@ -25,16 +25,27 @@ const LocalDockview = () => {
 
       return <Bible />;
     },
+    textEditor: (props: IDockviewPanelProps) => {
+      console.log("props", props);
+      const api: DockviewPanelApi = props.api;
+      // const groupApi: DockviewGroupPanelApi  = props.group.api;
+      const containerApi: DockviewApi = props.containerApi;
+
+      return <h2>Text Editor</h2>;
+    },
   };
   function onReady(event: DockviewReadyEvent) {
     console.log("onReady");
     const api: DockviewApi = event.api;
-
+    api.addPanel({
+      id: "textEditor",
+      component: "textEditor",
+    });
     dockviewRef.current = api;
   }
 
   return (
-    <div className="relative max-h-[100vh] w-full">
+    <div className="relative max-h-[80vh] w-full">
       <DockviewReact
         className="dockview-theme-light"
         components={components}
@@ -49,7 +60,7 @@ const LocalDockview = () => {
           });
         }}
       >
-        Add Panel
+        Open Bible
       </button>
     </div>
   );
