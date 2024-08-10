@@ -1,9 +1,22 @@
 import React, { useState } from "react";
-import { useBibleBooks } from "~/utils/bibleApi";
+import { useBibleBooks, useBibleVerse } from "~/utils/bibleApi";
 
 interface BibleContentProps {
   books: Book[];
 }
+
+const BookContent = ({ book }: { book: Book }) => {
+  const [chapter, setChapter] = useState<number>(1);
+  const { data: verseData, isLoading } = useBibleVerse({
+    book,
+    chapter,
+    version: "nvi",
+  });
+  if (isLoading || !verseData) {
+    return <div>Loading...</div>;
+  }
+  return <div className="">reading {book.name}</div>;
+};
 
 const BibleContent = ({ books }: BibleContentProps) => {
   console.log("books", books);

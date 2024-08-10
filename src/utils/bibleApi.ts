@@ -13,4 +13,31 @@ export const useBibleBooks = () =>
       queryFn: getBibleBooks,
     });
 
-  }
+}
+
+export type verseProps = {
+  book: Book;
+  chapter?: number;
+  version?: string;
+}
+
+export const getVerse = async({
+  book,
+  chapter = 1,
+  version = "nvi",
+}: verseProps) =>
+{
+  const response = await bibleAxiosClient.get<Verse>(`/verses/${version}/${book.abbrev.pt}/${chapter}`);
+  return response.data;
+}
+
+export const useBibleVerse = ({
+  book,
+  chapter = 1,
+  version = "nvi",
+}: verseProps) => {
+  return useQuery({
+    queryKey: ["bibleVerse", book.abbrev.pt, chapter, version],
+    queryFn: () => getVerse({ book, chapter, version }),
+  });
+}
