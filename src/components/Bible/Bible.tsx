@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useBibleBooks, useBibleVerse } from "~/utils/bibleApi";
 import { Input } from "../ui/input";
+import { SimpleSelect } from "../SimpleSelect";
 
 interface BibleContentProps {
   books: Book[];
@@ -31,40 +32,28 @@ const BookContent = ({
         </h1>
       </div>
       <div className="">
-        <p>Mudar de livro:</p>
-        <select
-          id="book"
-          value={book.abbrev.pt}
-          onChange={(e) =>
-            setBook(books.find((b) => b.abbrev.pt === e.target.value))
+        <SimpleSelect
+          options={books.map((book) => ({
+            label: book.name,
+            value: book.abbrev.pt,
+          }))}
+          onChange={(value) =>
+            setBook(books.find((b) => b.abbrev.pt === value))
           }
-          className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-        >
-          {books.map((book) => (
-            <option key={book.abbrev.pt} value={book.abbrev.pt}>
-              {book.name}
-            </option>
-          ))}
-        </select>
+          value={book.abbrev.pt}
+        />
       </div>
       <div className="mb-4">
-        <label htmlFor="chapter" className="block text-gray-700">
-          Select Chapter:
-        </label>
-        <select
-          id="chapter"
-          value={chapter}
-          onChange={(e) => setChapter(Number(e.target.value))}
-          className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-        >
-          {Array.from({ length: book.chapters }, (_, i) => i + 1).map(
-            (chap) => (
-              <option key={chap} value={chap}>
-                {chap}
-              </option>
-            ),
+        <SimpleSelect
+          options={Array.from({ length: book.chapters }, (_, i) => i + 1).map(
+            (chap) => ({
+              label: chap.toString(),
+              value: chap.toString(),
+            }),
           )}
-        </select>
+          onChange={(value) => setChapter(Number(value))}
+          value={chapter.toString()}
+        />
       </div>
       <div className="space-y-6">
         {verseData?.verses.map((verse) => (
