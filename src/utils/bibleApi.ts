@@ -3,7 +3,7 @@ import { bibleAxiosClient } from "./bibleAxiosClient";
 
 export const getBibleBooks = async () => {
   const response = await bibleAxiosClient.get<Book[]>("/books");
-  return response;
+  return response.data;
 };
 
 export const useBibleBooks = () =>
