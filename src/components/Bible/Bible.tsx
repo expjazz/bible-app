@@ -6,7 +6,15 @@ interface BibleContentProps {
   books: Book[];
 }
 
-const BookContent = ({ book }: { book: Book }) => {
+const BookContent = ({
+  book,
+  setBook,
+  books,
+}: {
+  book: Book;
+  books: Book[];
+  setBook: React.Dispatch<React.SetStateAction<Book | undefined>>;
+}) => {
   const [chapter, setChapter] = useState<number>(1);
   const { data: verseData, isLoading } = useBibleVerse({
     book,
@@ -16,11 +24,28 @@ const BookContent = ({ book }: { book: Book }) => {
 
   console.log("verseData", verseData);
   return (
-    <div className="mx-auto max-w-3xl p-4">
+    <div className="mx-auto h-[800px] max-w-3xl overflow-auto p-4">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold uppercase">
           {book.name} {chapter}
         </h1>
+      </div>
+      <div className="">
+        <p>Mudar de livro:</p>
+        <select
+          id="book"
+          value={book.abbrev.pt}
+          onChange={(e) =>
+            setBook(books.find((b) => b.abbrev.pt === e.target.value))
+          }
+          className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        >
+          {books.map((book) => (
+            <option key={book.abbrev.pt} value={book.abbrev.pt}>
+              {book.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="mb-4">
         <label htmlFor="chapter" className="block text-gray-700">
@@ -76,7 +101,7 @@ const BibleContent = ({ books }: BibleContentProps) => {
   const [book, setBook] = useState<Book | undefined>();
   const [bookSearch, setBookSearch] = useState<string>("");
   if (book) {
-    return <BookContent book={book} />;
+    return <BookContent setBook={setBook} book={book} books={books} />;
   }
   return (
     <div className="h-[800px] space-y-2 overflow-auto p-4">
