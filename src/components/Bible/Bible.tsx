@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useBibleBooks, useBibleVerse } from "~/utils/bibleApi";
 import { Input } from "../ui/input";
 import { SimpleSelect } from "../SimpleSelect";
 import { Label } from "../ui/label";
+import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
+import { text } from "stream/consumers";
+import useClickOutside from "~/utils/useClickOutside";
 
 interface BibleContentProps {
   books: Book[];
@@ -18,18 +21,26 @@ const BookContent = ({
   setBook: React.Dispatch<React.SetStateAction<Book | undefined>>;
 }) => {
   const [chapter, setChapter] = useState<number>(1);
+  const bibleContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedVerse, setSelectedVerse] = useState<number>();
   const { data: verseData, isLoading } = useBibleVerse({
     book,
     chapter,
     version: "nvi",
   });
 
+  useClickOutside(bibleContainerRef, () => setSelectedVerse(undefined));
   const handleSelect = () => {
     const selected = window?.getSelection();
+    if (!selected) return;
     console.log("selected", selected?.toString());
+    const currentVerse = verseData?.verses.find((verse) =>
+      verse.text.includes(selected?.toString()),
+    );
+    setSelectedVerse(currentVerse?.number ? currentVerse?.number : undefined);
   };
 
-  console.log("verseData", verseData);
+  console.log("verseData", selectedVerse, verseData);
   return (
     <div className="mx-auto h-[800px] max-w-3xl overflow-auto p-4">
       <div className="mb-8 text-center">
@@ -37,6 +48,11 @@ const BookContent = ({
           {book.name} {chapter}
         </h1>
       </div>
+
+      {/* <Popover>
+        <PopoverAnchor virtualRef={textSelectionRef.current} />
+        <PopoverContent>Place content for the popover here.</PopoverContent>
+      </Popover> */}
       <div className="my-4">
         <Label>Mudar de livro</Label>
         <SimpleSelect
@@ -63,12 +79,33 @@ const BookContent = ({
           value={chapter.toString()}
         />
       </div>
-      <div className="space-y-6" onMouseUp={handleSelect}>
+      <div
+        className="space-y-6"
+        onMouseUp={handleSelect}
+        ref={bibleContainerRef}
+      >
         {verseData?.verses.map((verse) => (
-          <div key={verse.number} className="flex items-start space-x-3">
-            <span className="text-xl font-bold text-gray-700">
-              {verse.number}
-            </span>
+          <div
+            key={verse.number}
+            id={`selectBibleVerse-${verse.number}`}
+            className="flex items-start space-x-3"
+          >
+            {selectedVerse && selectedVerse === verse.number ? (
+              <Popover open>
+                <PopoverAnchor>
+                  <span className="text-xl font-bold text-gray-700">
+                    {verse.number}
+                  </span>
+                </PopoverAnchor>
+                <PopoverContent>
+                  <p>{verse.text}</p>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <span className="text-xl font-bold text-gray-700">
+                {verse.number}
+              </span>
+            )}
             <p className="text-lg leading-relaxed">{verse.text}</p>
           </div>
         ))}
