@@ -53,19 +53,55 @@ const RichTextEditor: React.FC = () => {
       initialValue={initialValue as unknown as Descendant[]}
     >
       <Toolbar>
-        <MarkButton format="bold" icon={<MdFormatBold />} />
-        <MarkButton format="italic" icon={<MdFormatItalic />} />
-        <MarkButton format="underline" icon={<MdFormatUnderlined />} />
-        <MarkButton format="code" icon={<MdCode />} />
-        <BlockButton format="heading-one" icon={<MdLooksOne />} />
-        <BlockButton format="heading-two" icon={<MdLooksTwo />} />
-        <BlockButton format="block-quote" icon={<MdFormatQuote />} />
-        <BlockButton format="numbered-list" icon={<MdFormatListNumbered />} />
-        <BlockButton format="bulleted-list" icon={<MdFormatListBulleted />} />
-        <BlockButton format="left" icon={<MdFormatAlignLeft />} />
-        <BlockButton format="center" icon={<MdFormatAlignCenter />} />
-        <BlockButton format="right" icon={<MdFormatAlignRight />} />
-        <BlockButton format="justify" icon={<MdFormatAlignJustify />} />
+        <MarkButton
+          format="bold"
+          icon={<MdFormatBold className="text-4xl" />}
+        />
+        <MarkButton
+          format="italic"
+          icon={<MdFormatItalic className="text-4xl" />}
+        />
+        <MarkButton
+          format="underline"
+          icon={<MdFormatUnderlined className="text-4xl" />}
+        />
+        <MarkButton format="code" icon={<MdCode className="text-4xl" />} />
+        <BlockButton
+          format="heading-one"
+          icon={<MdLooksOne className="text-4xl" />}
+        />
+        <BlockButton
+          format="heading-two"
+          icon={<MdLooksTwo className="text-4xl" />}
+        />
+        <BlockButton
+          format="block-quote"
+          icon={<MdFormatQuote className="text-4xl" />}
+        />
+        <BlockButton
+          format="numbered-list"
+          icon={<MdFormatListNumbered className="text-4xl" />}
+        />
+        <BlockButton
+          format="bulleted-list"
+          icon={<MdFormatListBulleted className="text-4xl" />}
+        />
+        <BlockButton
+          format="left"
+          icon={<MdFormatAlignLeft className="text-4xl" />}
+        />
+        <BlockButton
+          format="center"
+          icon={<MdFormatAlignCenter className="text-4xl" />}
+        />
+        <BlockButton
+          format="right"
+          icon={<MdFormatAlignRight className="text-4xl" />}
+        />
+        <BlockButton
+          format="justify"
+          icon={<MdFormatAlignJustify className="text-4xl" />}
+        />
       </Toolbar>
       <Editable
         renderElement={renderElement}
