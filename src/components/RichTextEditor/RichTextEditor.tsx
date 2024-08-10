@@ -52,77 +52,77 @@ const RichTextEditor: React.FC = () => {
       editor={editor}
       initialValue={initialValue as unknown as Descendant[]}
     >
-      <Toolbar>
-        <MarkButton
-          format="bold"
-          icon={<MdFormatBold className="text-4xl" />}
-        />
-        <MarkButton
-          format="italic"
-          icon={<MdFormatItalic className="text-4xl" />}
-        />
-        <MarkButton
-          format="underline"
-          icon={<MdFormatUnderlined className="text-4xl" />}
-        />
-        <MarkButton format="code" icon={<MdCode className="text-4xl" />} />
-        <BlockButton
-          format="heading-one"
-          icon={<MdLooksOne className="text-4xl" />}
-        />
-        <BlockButton
-          format="heading-two"
-          icon={<MdLooksTwo className="text-4xl" />}
-        />
-        <BlockButton
-          format="block-quote"
-          icon={<MdFormatQuote className="text-4xl" />}
-        />
-        <BlockButton
-          format="numbered-list"
-          icon={<MdFormatListNumbered className="text-4xl" />}
-        />
-        <BlockButton
-          format="bulleted-list"
-          icon={<MdFormatListBulleted className="text-4xl" />}
-        />
-        <BlockButton
-          format="left"
-          icon={<MdFormatAlignLeft className="text-4xl" />}
-        />
-        <BlockButton
-          format="center"
-          icon={<MdFormatAlignCenter className="text-4xl" />}
-        />
-        <BlockButton
-          format="right"
-          icon={<MdFormatAlignRight className="text-4xl" />}
-        />
-        <BlockButton
-          format="justify"
-          icon={<MdFormatAlignJustify className="text-4xl" />}
-        />
-      </Toolbar>
-      <Editable
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
-        style={{
-          height: "100%",
-        }}
-        spellCheck
-        autoFocus
-        onKeyDown={(event) => {
-          for (const hotkey in HOTKEYS) {
-            if (isHotkey(hotkey, event)) {
-              event.preventDefault();
-              const mark = HOTKEYS[hotkey];
-              if (!mark) return;
-              toggleMark(editor, mark);
+      <div className="rounded bg-white p-4 shadow-md">
+        <Toolbar>
+          <MarkButton
+            format="bold"
+            icon={<MdFormatBold className="text-2xl" />}
+          />
+          <MarkButton
+            format="italic"
+            icon={<MdFormatItalic className="text-2xl" />}
+          />
+          <MarkButton
+            format="underline"
+            icon={<MdFormatUnderlined className="text-2xl" />}
+          />
+          <MarkButton format="code" icon={<MdCode className="text-2xl" />} />
+          <BlockButton
+            format="heading-one"
+            icon={<MdLooksOne className="text-2xl" />}
+          />
+          <BlockButton
+            format="heading-two"
+            icon={<MdLooksTwo className="text-2xl" />}
+          />
+          <BlockButton
+            format="block-quote"
+            icon={<MdFormatQuote className="text-2xl" />}
+          />
+          <BlockButton
+            format="numbered-list"
+            icon={<MdFormatListNumbered className="text-2xl" />}
+          />
+          <BlockButton
+            format="bulleted-list"
+            icon={<MdFormatListBulleted className="text-2xl" />}
+          />
+          <BlockButton
+            format="left"
+            icon={<MdFormatAlignLeft className="text-2xl" />}
+          />
+          <BlockButton
+            format="center"
+            icon={<MdFormatAlignCenter className="text-2xl" />}
+          />
+          <BlockButton
+            format="right"
+            icon={<MdFormatAlignRight className="text-2xl" />}
+          />
+          <BlockButton
+            format="justify"
+            icon={<MdFormatAlignJustify className="text-2xl" />}
+          />
+        </Toolbar>
+        <Editable
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          placeholder="Enter some rich text…"
+          className="mt-4 rounded-md border p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          spellCheck
+          autoFocus
+          onKeyDown={(event) => {
+            for (const hotkey in HOTKEYS) {
+              if (isHotkey(hotkey, event)) {
+                event.preventDefault();
+                const mark = HOTKEYS[hotkey];
+                if (!mark) return;
+                toggleMark(editor, mark);
+              }
             }
-          }
-        }}
-      />
+          }}
+        />
+      </div>
     </Slate>
   );
 };
@@ -222,43 +222,47 @@ const Element: React.FC<{
   switch (element.type) {
     case "block-quote":
       return (
-        <blockquote style={style} {...attributes}>
+        <blockquote
+          className="my-4 border-l-4 border-gray-300 pl-4 italic"
+          style={style}
+          {...attributes}
+        >
           {children}
         </blockquote>
       );
     case "bulleted-list":
       return (
-        <ul style={style} {...attributes}>
+        <ul className="list-disc pl-8" style={style} {...attributes}>
           {children}
         </ul>
       );
     case "heading-one":
       return (
-        <h1 style={style} {...attributes}>
+        <h1 className="my-4 text-4xl font-bold" style={style} {...attributes}>
           {children}
         </h1>
       );
     case "heading-two":
       return (
-        <h2 style={style} {...attributes}>
+        <h2 className="my-4 text-3xl font-bold" style={style} {...attributes}>
           {children}
         </h2>
       );
     case "list-item":
       return (
-        <li style={style} {...attributes}>
+        <li className="my-2" style={style} {...attributes}>
           {children}
         </li>
       );
     case "numbered-list":
       return (
-        <ol style={style} {...attributes}>
+        <ol className="list-decimal pl-8" style={style} {...attributes}>
           {children}
         </ol>
       );
     default:
       return (
-        <p style={style} {...attributes}>
+        <p className="my-2" style={style} {...attributes}>
           {children}
         </p>
       );
@@ -278,19 +282,19 @@ type LocalLeafPops = {
 
 const Leaf: React.FC<LocalLeafPops> = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
-    children = <strong>{children}</strong>;
+    children = <strong className="font-bold">{children}</strong>;
   }
 
   if (leaf.code) {
-    children = <code>{children}</code>;
+    children = <code className="rounded bg-gray-200 p-1">{children}</code>;
   }
 
   if (leaf.italic) {
-    children = <em>{children}</em>;
+    children = <em className="italic">{children}</em>;
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = <u className="underline">{children}</u>;
   }
 
   return <span {...attributes}>{children}</span>;
@@ -304,15 +308,15 @@ const BlockButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
   return (
     <button
       type="button"
-      style={{
-        backgroundColor: isBlockActive(
+      className={`m-1 rounded p-2 ${
+        isBlockActive(
           editor,
           format,
           TEXT_ALIGN_TYPES.includes(format) ? "align" : "type",
         )
-          ? "#ddd"
-          : "transparent",
-      }}
+          ? "bg-gray-300"
+          : "bg-white"
+      }`}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
@@ -331,9 +335,9 @@ const MarkButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
   return (
     <button
       type="button"
-      style={{
-        backgroundColor: isMarkActive(editor, format) ? "#ddd" : "transparent",
-      }}
+      className={`m-1 rounded p-2 ${
+        isMarkActive(editor, format) ? "bg-gray-300" : "bg-white"
+      }`}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleMark(editor, format);
@@ -347,7 +351,9 @@ const MarkButton: React.FC<{ format: string; icon: React.ReactNode }> = ({
 const Toolbar: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  return <div>{children}</div>;
+  return (
+    <div className="flex flex-wrap rounded bg-gray-100 p-2">{children}</div>
+  );
 };
 
 const initialValue = [
