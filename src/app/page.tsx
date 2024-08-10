@@ -1,12 +1,18 @@
 "use client";
 
-import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useRef } from "react";
+const LocalDockview = dynamic(
+  () => import("~/components/LocalDockview/LocalDockview"),
+  { ssr: false },
+);
+// import LocalDockview from "~/components/LocalDockview/LocalDockview";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white text-black">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h3>new app</h3>
+    <main className="flex h-full w-full flex-col items-center justify-center bg-white text-black">
+      <div className="flex w-full flex-col items-center justify-center gap-12">
+        <LocalDockview />
       </div>
     </main>
   );
