@@ -24,6 +24,11 @@ const BookContent = ({
     version: "nvi",
   });
 
+  const handleSelect = () => {
+    const selected = window?.getSelection();
+    console.log("selected", selected?.toString());
+  };
+
   console.log("verseData", verseData);
   return (
     <div className="mx-auto h-[800px] max-w-3xl overflow-auto p-4">
@@ -58,7 +63,7 @@ const BookContent = ({
           value={chapter.toString()}
         />
       </div>
-      <div className="space-y-6">
+      <div className="space-y-6" onMouseUp={handleSelect}>
         {verseData?.verses.map((verse) => (
           <div key={verse.number} className="flex items-start space-x-3">
             <span className="text-xl font-bold text-gray-700">
