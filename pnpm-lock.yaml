@@ -73,6 +73,9 @@ devDependencies:
   '@types/eslint':
     specifier: ^8.56.10
     version: 8.56.10
+  '@types/is-hotkey':
+    specifier: ^0.1.10
+    version: 0.1.10
   '@types/node':
     specifier: ^20.14.10
     version: 20.14.10
@@ -836,7 +839,6 @@ packages:
 
   /@types/is-hotkey@0.1.10:
     resolution: {integrity: sha512-RvC8KMw5BCac1NvRRyaHgMMEtBaZ6wh0pyPTBu7izn4Sj/AX9Y4aXU5c7rX8PnM/knsuUpC1IeoBkANtxBypsQ==}
-    dev: false
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}

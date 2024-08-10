@@ -13,7 +13,7 @@ import Bible from "../Bible/Bible";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 const LocalDockview = () => {
   const bibleCountRef = useRef(0);
-  const dockviewRef = useRef<DockviewApi>(null);
+  const dockviewRef = useRef<DockviewApi>();
   const components: Record<
     string,
     React.FunctionComponent<IDockviewPanelProps>
