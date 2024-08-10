@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useBibleBooks, useBibleVerse } from "~/utils/bibleApi";
 import { Input } from "../ui/input";
 import { SimpleSelect } from "../SimpleSelect";
+import { Label } from "../ui/label";
 
 interface BibleContentProps {
   books: Book[];
@@ -31,7 +32,8 @@ const BookContent = ({
           {book.name} {chapter}
         </h1>
       </div>
-      <div className="">
+      <div className="my-4">
+        <Label>Mudar de livro</Label>
         <SimpleSelect
           options={books.map((book) => ({
             label: book.name,
@@ -44,6 +46,7 @@ const BookContent = ({
         />
       </div>
       <div className="mb-4">
+        <Label>Mudar de capítulo</Label>
         <SimpleSelect
           options={Array.from({ length: book.chapters }, (_, i) => i + 1).map(
             (chap) => ({
