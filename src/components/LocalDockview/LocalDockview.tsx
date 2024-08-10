@@ -10,6 +10,7 @@ import {
 import "../../../node_modules/dockview/dist/styles/dockview.css";
 
 import Bible from "../Bible/Bible";
+import RichTextEditor from "../RichTextEditor/RichTextEditor";
 const LocalDockview = () => {
   const bibleCountRef = useRef(0);
   const dockviewRef = useRef<DockviewApi>(null);
@@ -31,7 +32,12 @@ const LocalDockview = () => {
       // const groupApi: DockviewGroupPanelApi  = props.group.api;
       const containerApi: DockviewApi = props.containerApi;
 
-      return <h2>Text Editor</h2>;
+      return (
+        <div>
+          <h2>Text Editor</h2>
+          <RichTextEditor />
+        </div>
+      );
     },
   };
   function onReady(event: DockviewReadyEvent) {
