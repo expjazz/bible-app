@@ -51,7 +51,14 @@ const RichTextEditor: React.FC = () => {
     <Slate
       editor={editor}
       onChange={(value) => {
-        console.log("value", value);
+        const isAstChange = editor.operations.some(
+          (op) => "set_selection" !== op.type,
+        );
+        if (isAstChange) {
+          // Save the value to Local Storage.
+          const content = JSON.stringify(value);
+          localStorage.setItem("content", content);
+        }
       }}
       initialValue={initialValue as unknown as Descendant[]}
     >
