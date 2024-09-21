@@ -5,7 +5,7 @@ interface Book {
   };
   author: string;
   chapters: number;
-  comment: string;
+  comment?: string;
   group: string;
   name: string;
   testament: string;
