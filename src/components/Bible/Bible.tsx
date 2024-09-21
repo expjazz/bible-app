@@ -7,6 +7,7 @@ import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import { text } from "stream/consumers";
 import useClickOutside from "~/utils/useClickOutside";
 import { MdClose } from "react-icons/md";
+import { trpc } from "~/server/trpc/client";
 
 interface BibleContentProps {
   books: Book[];
@@ -24,7 +25,7 @@ const BookContent = ({
   const [chapter, setChapter] = useState<number>(1);
   const bibleContainerRef = useRef<HTMLDivElement>(null);
   const [selectedVerse, setSelectedVerse] = useState<number>();
-  const { data: verseData, isLoading } = useBibleVerse({
+  const { data: verseData, isLoading } = trpc.bibleVerse.useQuery({
     book,
     chapter,
     version: "nvi",
@@ -175,7 +176,8 @@ const BibleContent = ({ books }: BibleContentProps) => {
   );
 };
 const Bible = () => {
-  const { data: booksData, isLoading } = useBibleBooks();
+  const { data: booksData, isLoading } = trpc.bibleBooks.useQuery();
+  console.log("booksData", booksData);
   if (isLoading || !booksData) {
     return <div>Loading...</div>;
   }
