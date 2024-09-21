@@ -14,10 +14,13 @@ export const prisma =
   }).$extends({
     model: {
       user: {
-        async signUp(email: string, password: string) {
+        async signUp(name: string, email: string, password: string)
+        {
+          console.log('inside prisma', name, email, password)
           const hash = await bcrypt.hash(password, 10)
           return prisma.user.create({
             data: {
+              name,
               email,
               password: {
                 create: {

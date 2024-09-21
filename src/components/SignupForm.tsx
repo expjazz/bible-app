@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,6 +16,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
+import { signup } from "~/app/actions";
 const formSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -30,8 +33,9 @@ const SignupForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("hello", data);
+    await signup(data.name, data.email, data.password);
   };
 
   return (
@@ -40,12 +44,12 @@ const SignupForm = () => {
         <Button variant="outline">Crie sua conta</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Crie sua conta</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>Crie sua conta</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -82,12 +86,12 @@ const SignupForm = () => {
                   </FormItem>
                 )}
               />
-            </form>
-          </Form>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

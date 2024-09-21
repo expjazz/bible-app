@@ -17,15 +17,9 @@ model User {
   id       String    @id @default(cuid())
   email    String    @unique
   name     String?
-  password Password?
+  password String
   Note     Note[]
   Article  Article[]
-}
-
-model Password {
-  hash   String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @unique
 }
 
 model Note {

@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "~/server/db";
-
+import bcrypt from 'bcrypt';
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -15,11 +15,19 @@ const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email", placeholder: "exemplo@exemplo.com" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, req)
+      {
+        if (!credentials) return null;
+        console.log('inside authorize')
         // Add logic here to look up the user from the credentials supplied
-        const user = await prisma.user.logIn(credentials.email, credentials.password)
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+        console.log('user', user)
+        if (!user) return null;
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
-        if (user) {
+        console.log("isValid", isPasswordValid)
+
+        if (user && isPasswordValid) {
           // Any object returned will be saved in `user` property of the JWT
           return user
         } else {
