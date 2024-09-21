@@ -10,7 +10,7 @@ const BookValidation = z.object({
   }),
   author: z.string(),
   chapters: z.number(),
-  comment: z.string(),
+  comment: z.string().optional(),
   group: z.string(),
   name: z.string(),
   testament: z.string(),
