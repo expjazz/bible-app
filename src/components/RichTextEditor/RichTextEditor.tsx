@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo } from "react";
+"use client";
+
+import React, { useCallback, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, useSlate, Slate } from "slate-react";
 import {
@@ -25,6 +27,10 @@ import {
   MdFormatAlignJustify,
 } from "react-icons/md";
 import { CustomElement } from "~/types/slate";
+import { useParams } from "next/navigation";
+import { Button } from "../ui/button";
+import { createArticle, updateArticle } from "~/app/actions";
+import { useSession } from "next-auth/react";
 
 const HOTKEYS: Record<string, string> = {
   "mod+b": "bold",
@@ -36,7 +42,9 @@ const HOTKEYS: Record<string, string> = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
-const RichTextEditor: React.FC = () => {
+const RichTextEditor: React.FC<{ articleId?: string }> = ({ articleId }) => {
+  const { data: session } = useSession();
+  console.log("session", session);
   const renderElement = useCallback(
     (props: LocalElementPops) => <Element {...props} />,
     [],
@@ -45,95 +53,124 @@ const RichTextEditor: React.FC = () => {
     (props: LocalLeafPops) => <Leaf {...props} />,
     [],
   );
+
+  const [valueToSave, setValueToSave] = useState<Descendant[]>();
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
-    <Slate
-      editor={editor}
-      onChange={(value) => {
-        const isAstChange = editor.operations.some(
-          (op) => "set_selection" !== op.type,
-        );
-        if (isAstChange) {
-          // Save the value to Local Storage.
-          const content = JSON.stringify(value);
-          localStorage.setItem("content", content);
-        }
-      }}
-      initialValue={initialValue as unknown as Descendant[]}
-    >
-      <div className="rounded bg-white p-4 shadow-md">
-        <Toolbar>
-          <MarkButton
-            format="bold"
-            icon={<MdFormatBold className="text-2xl" />}
-          />
-          <MarkButton
-            format="italic"
-            icon={<MdFormatItalic className="text-2xl" />}
-          />
-          <MarkButton
-            format="underline"
-            icon={<MdFormatUnderlined className="text-2xl" />}
-          />
-          <MarkButton format="code" icon={<MdCode className="text-2xl" />} />
-          <BlockButton
-            format="heading-one"
-            icon={<MdLooksOne className="text-2xl" />}
-          />
-          <BlockButton
-            format="heading-two"
-            icon={<MdLooksTwo className="text-2xl" />}
-          />
-          <BlockButton
-            format="block-quote"
-            icon={<MdFormatQuote className="text-2xl" />}
-          />
-          <BlockButton
-            format="numbered-list"
-            icon={<MdFormatListNumbered className="text-2xl" />}
-          />
-          <BlockButton
-            format="bulleted-list"
-            icon={<MdFormatListBulleted className="text-2xl" />}
-          />
-          <BlockButton
-            format="left"
-            icon={<MdFormatAlignLeft className="text-2xl" />}
-          />
-          <BlockButton
-            format="center"
-            icon={<MdFormatAlignCenter className="text-2xl" />}
-          />
-          <BlockButton
-            format="right"
-            icon={<MdFormatAlignRight className="text-2xl" />}
-          />
-          <BlockButton
-            format="justify"
-            icon={<MdFormatAlignJustify className="text-2xl" />}
-          />
-        </Toolbar>
-        <Editable
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="Enter some rich text…"
-          className="prose mt-4 rounded-md border p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          spellCheck
-          autoFocus
-          onKeyDown={(event) => {
-            for (const hotkey in HOTKEYS) {
-              if (isHotkey(hotkey, event)) {
-                event.preventDefault();
-                const mark = HOTKEYS[hotkey];
-                if (!mark) return;
-                toggleMark(editor, mark);
+    <>
+      <Slate
+        editor={editor}
+        onChange={(value) => {
+          const isAstChange = editor.operations.some(
+            (op) => "set_selection" !== op.type,
+          );
+          if (isAstChange) {
+            // Save the value to Local Storage.
+            const content = JSON.stringify(value);
+            localStorage.setItem("content", content);
+            setValueToSave(value);
+          }
+        }}
+        initialValue={initialValue as unknown as Descendant[]}
+      >
+        <div className="rounded bg-white p-4 shadow-md">
+          <Toolbar>
+            <MarkButton
+              format="bold"
+              icon={<MdFormatBold className="text-2xl" />}
+            />
+            <MarkButton
+              format="italic"
+              icon={<MdFormatItalic className="text-2xl" />}
+            />
+            <MarkButton
+              format="underline"
+              icon={<MdFormatUnderlined className="text-2xl" />}
+            />
+            <MarkButton format="code" icon={<MdCode className="text-2xl" />} />
+            <BlockButton
+              format="heading-one"
+              icon={<MdLooksOne className="text-2xl" />}
+            />
+            <BlockButton
+              format="heading-two"
+              icon={<MdLooksTwo className="text-2xl" />}
+            />
+            <BlockButton
+              format="block-quote"
+              icon={<MdFormatQuote className="text-2xl" />}
+            />
+            <BlockButton
+              format="numbered-list"
+              icon={<MdFormatListNumbered className="text-2xl" />}
+            />
+            <BlockButton
+              format="bulleted-list"
+              icon={<MdFormatListBulleted className="text-2xl" />}
+            />
+            <BlockButton
+              format="left"
+              icon={<MdFormatAlignLeft className="text-2xl" />}
+            />
+            <BlockButton
+              format="center"
+              icon={<MdFormatAlignCenter className="text-2xl" />}
+            />
+            <BlockButton
+              format="right"
+              icon={<MdFormatAlignRight className="text-2xl" />}
+            />
+            <BlockButton
+              format="justify"
+              icon={<MdFormatAlignJustify className="text-2xl" />}
+            />
+          </Toolbar>
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            placeholder="Enter some rich text…"
+            className="prose mt-4 rounded-md border p-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            spellCheck
+            autoFocus
+            onKeyDown={(event) => {
+              for (const hotkey in HOTKEYS) {
+                if (isHotkey(hotkey, event)) {
+                  event.preventDefault();
+                  const mark = HOTKEYS[hotkey];
+                  if (!mark) return;
+                  toggleMark(editor, mark);
+                }
               }
-            }
-          }}
-        />
-      </div>
-    </Slate>
+            }}
+          />
+        </div>
+      </Slate>
+      <Button
+        type="button"
+        onClick={async () => {
+          if (!session?.user?.id) {
+            return;
+          }
+          if (articleId) {
+            await updateArticle({
+              id: articleId,
+              title: "Title",
+              content: JSON.stringify(valueToSave),
+            });
+          } else {
+            await createArticle({
+              title: "Title",
+              content: JSON.stringify(valueToSave),
+              userId: session.user.id,
+            });
+          }
+          console.log("valueToSave", valueToSave);
+        }}
+      >
+        Save
+      </Button>
+    </>
   );
 };
 

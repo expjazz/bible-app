@@ -21,7 +21,15 @@ export async function login(email: string, password: string)
   return signIn("credentials", { email, password })
 }
 
-export async function createArticle(title: string, content: string, userId: string) {
+export async function createArticle({
+  title,
+  content,
+  userId,
+}: {
+  title: string;
+  content: string;
+  userId: string;
+}) {
   return prisma.article.create({
     data: {
       title,
@@ -31,7 +39,15 @@ export async function createArticle(title: string, content: string, userId: stri
   });
 }
 
-export async function updateArticle(id: string, title: string, content: string) {
+export async function updateArticle({
+  id,
+  title,
+  content,
+}: {
+  id: string;
+  title: string;
+  content: string;
+}) {
   return prisma.article.update({
     where: { id },
     data: {

@@ -3,6 +3,14 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "~/server/db";
 import bcrypt from 'bcrypt';
 const authOptions: NextAuthOptions = {
+  callbacks: {
+    session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
