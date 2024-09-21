@@ -39,5 +39,28 @@ export const appRouter = createTRPCRouter({
 
 });
 
+export const articleRouter = createTRPCRouter({
+  getArticles: baseProcedure.input(z.object({
+    userId: z.string(),
+  })).query(async ({ input }) => {
+    const articles = await prisma.article.findMany({
+      where: {
+        userId: input.userId,
+      },
+    });
+    return articles;
+  }),
+  getArticleById: baseProcedure.input(z.object({
+    id: z.string(),
+  })).query(async ({ input }) => {
+    const article = await prisma.article.findUnique({
+      where: {
+        id: input.id,
+      },
+    });
+    return article;
+  }),
+});
+
 // export type definition of API
 export type AppRouter = typeof appRouter;
