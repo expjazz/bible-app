@@ -11,34 +11,6 @@ export const prisma =
   new PrismaClient({
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  }).$extends({
-    model: {
-      user: {
-        async signUp(name: string, email: string, password: string)
-        {
-          console.log('inside prisma', name, email, password)
-          const hash = await bcrypt.hash(password, 10)
-          return prisma.user.create({
-            data: {
-              name,
-              email,
-              password: {
-                create: {
-                  hash,
-                },
-              },
-            },
-          })
-        },
-        async logIn(email: string, password: string) {
-          const user = await prisma.user.findUnique({ where: { email } });
-          if (!user) return null;
-          const isPasswordValid = await bcrypt.compare(password, user.password);
-          return isPasswordValid ? user : null;
-
-        },
-      }
-    }
   })
 
 
