@@ -4,6 +4,7 @@ import React from "react";
 import SignupForm from "./SignupForm";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import LoginForm from "./LoginForm";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -13,7 +14,7 @@ const Navbar = () => {
       {status !== "authenticated" ? (
         <div className="flex">
           <SignupForm />
-          <Link href="/api/auth/signin">Login</Link>
+          <LoginForm />
         </div>
       ) : null}
     </div>
