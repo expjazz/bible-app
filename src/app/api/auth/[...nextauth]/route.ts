@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "~/server/db";
 import bcrypt from 'bcrypt';
 const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+
+  },
   callbacks: {
     session({ session, token }) {
       if (session.user && token.sub) {
