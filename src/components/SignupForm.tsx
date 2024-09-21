@@ -34,7 +34,6 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("hello", data);
     await signup(data.name, data.email, data.password);
   };
 

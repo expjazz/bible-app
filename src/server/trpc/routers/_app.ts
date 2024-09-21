@@ -36,6 +36,7 @@ export const appRouter = createTRPCRouter({
     const verse = await getVerse(input);
     return verse;
   }),
+
 });
 
 // export type definition of API

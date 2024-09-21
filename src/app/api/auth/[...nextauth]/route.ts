@@ -18,7 +18,6 @@ const authOptions: NextAuthOptions = {
         if (!user) return null;
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
-        console.log("isValid", isPasswordValid)
 
         if (user && isPasswordValid) {
           return user

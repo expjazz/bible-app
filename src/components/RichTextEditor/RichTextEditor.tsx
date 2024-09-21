@@ -50,6 +50,9 @@ const RichTextEditor: React.FC = () => {
   return (
     <Slate
       editor={editor}
+      onChange={(value) => {
+        console.log("value", value);
+      }}
       initialValue={initialValue as unknown as Descendant[]}
     >
       <div className="rounded bg-white p-4 shadow-md">

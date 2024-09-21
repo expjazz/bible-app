@@ -19,7 +19,6 @@ const LocalDockview = () => {
     React.FunctionComponent<IDockviewPanelProps>
   > = {
     bible: (props: IDockviewPanelProps) => {
-      console.log("props", props);
       const api: DockviewPanelApi = props.api;
       // const groupApi: DockviewGroupPanelApi  = props.group.api;
       const containerApi: DockviewApi = props.containerApi;
@@ -27,7 +26,6 @@ const LocalDockview = () => {
       return <Bible />;
     },
     textEditor: (props: IDockviewPanelProps) => {
-      console.log("props", props);
       const api: DockviewPanelApi = props.api;
       // const groupApi: DockviewGroupPanelApi  = props.group.api;
       const containerApi: DockviewApi = props.containerApi;
@@ -41,7 +39,6 @@ const LocalDockview = () => {
     },
   };
   function onReady(event: DockviewReadyEvent) {
-    console.log("onReady");
     const api: DockviewApi = event.api;
     api.addPanel({
       id: "textEditor",
