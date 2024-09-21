@@ -1,4 +1,5 @@
 "use server";
+import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { signIn } from 'next-auth/react';
 
@@ -33,7 +34,7 @@ export async function createArticle({
   return prisma.article.create({
     data: {
       title,
-      content,
+      content: content as Prisma.InputJsonValue,
       userId,
     },
   });
@@ -52,7 +53,7 @@ export async function updateArticle({
     where: { id },
     data: {
       title,
-      content,
+      content: content as Prisma.InputJsonValue,
     },
   });
 }
