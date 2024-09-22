@@ -28,7 +28,7 @@ export async function createArticle({
   userId,
 }: {
   title: string;
-  content: string;
+  content: Prisma.InputJsonValue;
   userId: string;
 }) {
   return prisma.article.create({
@@ -47,7 +47,7 @@ export async function updateArticle({
 }: {
   id: string;
   title: string;
-  content: string;
+  content: Prisma.InputJsonValue;
 }) {
   return prisma.article.update({
     where: { id },

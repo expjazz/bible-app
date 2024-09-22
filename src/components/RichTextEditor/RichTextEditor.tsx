@@ -31,6 +31,7 @@ import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { createArticle, updateArticle } from "~/app/actions";
 import { useSession } from "next-auth/react";
+import { Prisma } from "@prisma/client";
 
 const HOTKEYS: Record<string, string> = {
   "mod+b": "bold",
@@ -156,12 +157,12 @@ const RichTextEditor: React.FC<{ articleId?: string }> = ({ articleId }) => {
             await updateArticle({
               id: articleId,
               title: "Title",
-              content: JSON.stringify(valueToSave),
+              content: valueToSave as unknown as Prisma.InputJsonValue,
             });
           } else {
             await createArticle({
               title: "Title",
-              content: JSON.stringify(valueToSave),
+              content: valueToSave as unknown as Prisma.InputJsonValue,
               userId: session.user.id,
             });
           }
