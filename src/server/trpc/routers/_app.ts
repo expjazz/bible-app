@@ -36,10 +36,6 @@ export const appRouter = createTRPCRouter({
     const verse = await getVerse(input);
     return verse;
   }),
-
-});
-
-export const articleRouter = createTRPCRouter({
   getArticles: baseProcedure.input(z.object({
     userId: z.string(),
   })).query(async ({ input }) => {
@@ -61,6 +57,8 @@ export const articleRouter = createTRPCRouter({
     return article;
   }),
 });
+
+
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

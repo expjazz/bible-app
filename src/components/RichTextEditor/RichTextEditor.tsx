@@ -43,9 +43,27 @@ const HOTKEYS: Record<string, string> = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
-const RichTextEditor: React.FC<{ articleId?: string }> = ({ articleId }) => {
+const RichTextEditor: React.FC<{
+  initialValue?: Descendant[];
+  articleId?: string;
+}> = ({
+  articleId,
+  initialValue = [
+    {
+      type: "paragraph",
+      children: [
+        { text: "This is editable " },
+        { text: "rich", bold: true },
+        { text: " text, " },
+        { text: "much" },
+        { text: " better than a " },
+        { text: "<textarea>" },
+        { text: "!" },
+      ],
+    },
+  ],
+}) => {
   const { data: session } = useSession();
-  console.log("session", session);
   const renderElement = useCallback(
     (props: LocalElementPops) => <Element {...props} />,
     [],
@@ -403,20 +421,5 @@ const Toolbar: React.FC<{
     <div className="flex flex-wrap rounded bg-gray-100 p-2">{children}</div>
   );
 };
-
-const initialValue = [
-  {
-    type: "paragraph",
-    children: [
-      { text: "This is editable " },
-      { text: "rich", bold: true },
-      { text: " text, " },
-      { text: "much" },
-      { text: " better than a " },
-      { text: "<textarea>" },
-      { text: "!" },
-    ],
-  },
-];
 
 export default RichTextEditor;
