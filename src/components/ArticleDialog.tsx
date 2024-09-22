@@ -31,9 +31,11 @@ const ArticleDialog: React.FC<{
         <section>
           {articles?.map((article) => (
             <Link key={article.id} href={`/${article.id}`}>
-              <div className="flex flex-col">
-                <h3>{article.title}</h3>
-              </div>
+              <button onClick={() => setOpen(false)}>
+                <div className="flex flex-col">
+                  <h3>{article.title}</h3>
+                </div>
+              </button>
             </Link>
           ))}
         </section>
