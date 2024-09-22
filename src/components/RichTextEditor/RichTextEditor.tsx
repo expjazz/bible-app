@@ -32,6 +32,8 @@ import { Button } from "../ui/button";
 import { createArticle, updateArticle } from "~/app/actions";
 import { useSession } from "next-auth/react";
 import { Prisma } from "@prisma/client";
+import { useArticleStore } from "~/stores/article-store-provider";
+import { Input } from "../ui/input";
 
 const HOTKEYS: Record<string, string> = {
   "mod+b": "bold",
@@ -63,6 +65,7 @@ const RichTextEditor: React.FC<{
     },
   ],
 }) => {
+  const { setArticle, setTitle, title } = useArticleStore((state) => state);
   const { data: session } = useSession();
   const renderElement = useCallback(
     (props: LocalElementPops) => <Element {...props} />,
@@ -88,12 +91,17 @@ const RichTextEditor: React.FC<{
             // Save the value to Local Storage.
             const content = JSON.stringify(value);
             localStorage.setItem("content", content);
-            setValueToSave(value);
+            setArticle(value);
           }
         }}
         initialValue={initialValue as unknown as Descendant[]}
       >
         <div className="rounded bg-white p-4 shadow-md">
+          <Input
+            placeholder="Título"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <Toolbar>
             <MarkButton
               format="bold"
@@ -165,30 +173,6 @@ const RichTextEditor: React.FC<{
           />
         </div>
       </Slate>
-      <Button
-        type="button"
-        onClick={async () => {
-          if (!session?.user?.id) {
-            return;
-          }
-          if (articleId) {
-            await updateArticle({
-              id: articleId,
-              title: "Title",
-              content: valueToSave as unknown as Prisma.InputJsonValue,
-            });
-          } else {
-            await createArticle({
-              title: "Title",
-              content: valueToSave as unknown as Prisma.InputJsonValue,
-              userId: session.user.id,
-            });
-          }
-          console.log("valueToSave", valueToSave);
-        }}
-      >
-        Save
-      </Button>
     </>
   );
 };

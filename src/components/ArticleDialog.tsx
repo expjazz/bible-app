@@ -1,3 +1,5 @@
+"use client";
+
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
@@ -16,17 +18,16 @@ const ArticleDialog: React.FC<{
   open: boolean;
   setOpen: (open: boolean) => void;
 }> = ({ open, setOpen }) => {
+  console.log("inside modal");
   const { data: session } = useSession();
   const { data: articles } = trpc.getArticles.useQuery({
     userId: session?.user?.id ?? "",
   });
-  console.log("inside modal", articles);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>Copy</DialogDescription>
+          <DialogTitle>Estudos</DialogTitle>
         </DialogHeader>
         <section>
           {articles?.map((article) => (
@@ -39,9 +40,6 @@ const ArticleDialog: React.FC<{
             </Link>
           ))}
         </section>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

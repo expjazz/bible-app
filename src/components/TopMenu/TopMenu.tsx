@@ -17,9 +17,36 @@ import {
 } from "~/components/ui/menubar";
 import ArticleDialog from "../ArticleDialog";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+import { createArticle, updateArticle } from "~/app/actions";
+import { useArticleStore } from "~/stores/article-store-provider";
+import { useSession } from "next-auth/react";
+import { Prisma } from "@prisma/client";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
+  const { data: session } = useSession();
+  const { articleId } = useParams<{ articleId?: string }>();
+  const { article, title } = useArticleStore((store) => store);
+  console.log("article", article);
+  const saveArticle = async () => {
+    if (!session) {
+      return;
+    }
+    if (articleId) {
+      await updateArticle({
+        id: articleId,
+        content: article as unknown as Prisma.InputJsonValue,
+        title,
+      });
+    } else {
+      await createArticle({
+        content: article as unknown as Prisma.InputJsonValue,
+        title,
+        userId: session.user.id,
+      });
+    }
+  };
   return (
     <>
       <ArticleDialog open={openArticles} setOpen={setOpenArticles} />
@@ -30,9 +57,7 @@ export function TopMenu() {
             <MenubarItem onClick={() => setOpenArticles(true)}>
               Ver estudos
             </MenubarItem>
-            <MenubarItem>
-              New Window <MenubarShortcut>⌘N</MenubarShortcut>
-            </MenubarItem>
+            <MenubarItem onClick={saveArticle}>Salvar</MenubarItem>
             <MenubarItem disabled>New Incognito Window</MenubarItem>
             <MenubarSeparator />
             <MenubarSub>
