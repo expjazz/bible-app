@@ -40,6 +40,10 @@ export const appRouter = createTRPCRouter({
     userId: z.string(),
   })).query(async ({ input }) => {
     const articles = await prisma.article.findMany({
+      select: {
+        id: true,
+        title: true,
+      },
       where: {
         userId: input.userId,
       },
