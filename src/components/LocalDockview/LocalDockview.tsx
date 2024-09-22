@@ -18,7 +18,9 @@ import { trpc } from "~/server/trpc/client";
 import { Descendant } from "slate";
 const LocalDockview = () => {
   const { articleId } = useParams<{ articleId?: string }>();
-  const [article] = trpc.getArticleById.useSuspenseQuery({ id: articleId! });
+  const [article] = articleId
+    ? trpc.getArticleById.useSuspenseQuery({ id: articleId })
+    : [undefined];
   console.log("article", article, articleId);
   const bibleCountRef = useRef(0);
   const dockviewRef = useRef<DockviewApi>();
