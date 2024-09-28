@@ -34,6 +34,7 @@ import { useSession } from "next-auth/react";
 import { Prisma } from "@prisma/client";
 import { useArticleStore } from "~/stores/article-store-provider";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const HOTKEYS: Record<string, string> = {
   "mod+b": "bold",
@@ -54,19 +55,13 @@ const RichTextEditor: React.FC<{
     {
       type: "paragraph",
       children: [
-        { text: "This is editable " },
-        { text: "rich", bold: true },
-        { text: " text, " },
-        { text: "much" },
-        { text: " better than a " },
-        { text: "<textarea>" },
-        { text: "!" },
+        { text: "Escreva aqui o seu " },
+        { text: "estudo!", bold: true },
       ],
     },
   ],
 }) => {
   const { setArticle, setTitle, title } = useArticleStore((state) => state);
-  const { data: session } = useSession();
   const renderElement = useCallback(
     (props: LocalElementPops) => <Element {...props} />,
     [],
@@ -76,7 +71,6 @@ const RichTextEditor: React.FC<{
     [],
   );
 
-  const [valueToSave, setValueToSave] = useState<Descendant[]>();
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
@@ -97,11 +91,15 @@ const RichTextEditor: React.FC<{
         initialValue={initialValue as unknown as Descendant[]}
       >
         <div className="rounded bg-white p-4 shadow-md">
-          <Input
-            placeholder="Título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <div className="mb-4 space-y-2">
+            <Label>Título</Label>
+            <Input
+              label="Título"
+              placeholder="Título"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
           <Toolbar>
             <MarkButton
               format="bold"
