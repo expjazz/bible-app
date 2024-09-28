@@ -18,9 +18,8 @@ export default async function HomePage({
   void trpc.getArticleById.prefetch({ id: params.articleId });
   return (
     <HydrateClient>
-      <main className="flex h-full w-full flex-col items-center justify-center bg-white text-black">
-        <Navbar />
-        <div className="flex w-full flex-col items-center justify-center gap-12">
+      <main className="flex h-full w-full flex-col bg-white text-black">
+        <div className="w-full">
           <Suspense fallback={<div>Loading...</div>}>
             <LocalDockview />
           </Suspense>

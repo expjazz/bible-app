@@ -12,9 +12,8 @@ const LocalDockview = dynamic(
 
 export default function HomePage() {
   return (
-    <main className="flex h-full w-full flex-col items-center justify-center bg-white text-black">
-      <Navbar />
-      <div className="flex w-full flex-col items-center justify-center gap-12">
+    <main className="flex h-full w-full flex-col bg-white text-black">
+      <div className="flex w-full flex-col">
         <LocalDockview />
       </div>
     </main>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   DockviewApi,
   DockviewGroupPanelApi,
@@ -18,6 +18,7 @@ import { trpc } from "~/server/trpc/client";
 import { Descendant } from "slate";
 import { Button } from "../ui/button";
 const LocalDockview = () => {
+  const [loading, setLoading] = useState(false);
   const { articleId } = useParams<{ articleId?: string }>();
   const [article] = articleId
     ? trpc.getArticleById.useSuspenseQuery({ id: articleId })
@@ -61,16 +62,19 @@ const LocalDockview = () => {
       title: "Editor de Texto",
     });
     dockviewRef.current = api;
+    setLoading(false);
   }
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="relative max-h-[calc(95vh-22px)] w-full">
+    <div className="relative max-h-[calc(100vh-10%)] w-full">
       <DockviewReact
         className="dockview-theme-light"
         components={components}
         onReady={onReady}
       />
       <Button
+        className="ml-4"
         onClick={() => {
           bibleCountRef.current += 1;
           dockviewRef.current?.addPanel({
@@ -80,7 +84,7 @@ const LocalDockview = () => {
           });
         }}
       >
-        Open Bible
+        Abrir Bíblia
       </Button>
     </div>
   );
