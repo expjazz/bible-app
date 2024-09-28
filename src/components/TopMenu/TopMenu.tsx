@@ -22,6 +22,8 @@ import { createArticle, updateArticle } from "~/app/actions";
 import { useArticleStore } from "~/stores/article-store-provider";
 import { useSession } from "next-auth/react";
 import { Prisma } from "@prisma/client";
+import LoginForm from "../LoginForm";
+import SignupForm from "../SignupForm";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
@@ -134,6 +136,21 @@ export function TopMenu() {
             <MenubarItem inset>Add Profile...</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
+        <div className="w-[28%]" />
+        {status !== "authenticated" ? (
+          <>
+            <MenubarMenu>
+              <MenubarTrigger>
+                <LoginForm />
+              </MenubarTrigger>
+            </MenubarMenu>
+            <MenubarMenu>
+              <MenubarTrigger>
+                <SignupForm />
+              </MenubarTrigger>
+            </MenubarMenu>
+          </>
+        ) : null}
       </Menubar>
     </>
   );

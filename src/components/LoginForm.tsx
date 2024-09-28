@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { Paragraph } from "~/components/ui/typography";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { signIn } from "next-auth/react";
@@ -39,7 +40,9 @@ const LoginForm = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Login</Button>
+        <button>
+          <Paragraph>Login</Paragraph>
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

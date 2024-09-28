@@ -8,6 +8,7 @@ import LoginForm from "./LoginForm";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  console.log(session, status, "auth");
   return (
     <div className="flex">
       {status !== "authenticated" ? (

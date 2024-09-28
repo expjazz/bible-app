@@ -17,6 +17,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { signup } from "~/app/actions";
+import { Paragraph } from "./ui/typography";
 const formSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -40,7 +41,7 @@ const SignupForm = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Crie sua conta</Button>
+        <button>Crie sua conta</button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
