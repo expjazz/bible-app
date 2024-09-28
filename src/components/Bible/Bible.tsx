@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useBibleBooks, useBibleVerse } from "~/utils/bibleApi";
+import React, { useRef, useState } from "react";
+import { trpc } from "~/server/trpc/client";
 import { Input } from "../ui/input";
 import { SimpleSelect } from "../SimpleSelect";
 import { Label } from "../ui/label";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
-import { text } from "stream/consumers";
 import useClickOutside from "~/utils/useClickOutside";
-import { MdClose } from "react-icons/md";
-import { trpc } from "~/server/trpc/client";
+import { MdClose, MdSearch } from "react-icons/md";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
+import { Paragraph } from "../ui/typography";
 
 interface BibleContentProps {
   books: Book[];
@@ -32,6 +34,7 @@ const BookContent = ({
   });
 
   useClickOutside(bibleContainerRef, () => setSelectedVerse(undefined));
+
   const handleSelect = () => {
     const selected = window?.getSelection();
     if (!selected) return;
@@ -42,142 +45,189 @@ const BookContent = ({
   };
 
   return (
-    <div className="mx-auto h-[800px] max-w-3xl overflow-auto p-4">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold uppercase">
-          {book.name} {chapter}
-        </h1>
-      </div>
-
-      <div className="my-4">
-        <Label>Mudar de livro</Label>
-        <SimpleSelect
-          options={books.map((book) => ({
-            label: book.name,
-            value: book.abbrev.pt,
-          }))}
-          onChange={(value) =>
-            setBook(books.find((b) => b.abbrev.pt === value))
-          }
-          value={book.abbrev.pt}
-        />
-      </div>
-      <div className="mb-4">
-        <Label>Mudar de capítulo</Label>
-        <SimpleSelect
-          options={Array.from({ length: book.chapters }, (_, i) => i + 1).map(
-            (chap) => ({
-              label: chap.toString(),
-              value: chap.toString(),
-            }),
-          )}
-          onChange={(value) => setChapter(Number(value))}
-          value={chapter.toString()}
-        />
-      </div>
-      <div
-        className="space-y-6"
-        onMouseUp={handleSelect}
-        ref={bibleContainerRef}
-      >
-        {verseData?.verses.map((verse) => (
+    <Card className="mx-auto max-w-4xl">
+      <CardHeader>
+        <CardTitle className="text-center text-4xl font-bold text-primary">
+          {book.name} - Capítulo {chapter}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6 grid grid-cols-2 gap-4">
+          <div>
+            <Label className="text-lg font-semibold text-secondary">
+              Livro
+            </Label>
+            <SimpleSelect
+              options={books.map((book) => ({
+                label: book.name,
+                value: book.abbrev.pt,
+              }))}
+              onChange={(value) =>
+                setBook(books.find((b) => b.abbrev.pt === value))
+              }
+              value={book.abbrev.pt}
+            />
+          </div>
+          <div>
+            <Label className="text-lg font-semibold text-secondary">
+              Capítulo
+            </Label>
+            <SimpleSelect
+              options={Array.from(
+                { length: book.chapters },
+                (_, i) => i + 1,
+              ).map((chap) => ({
+                label: chap.toString(),
+                value: chap.toString(),
+              }))}
+              onChange={(value) => setChapter(Number(value))}
+              value={chapter.toString()}
+            />
+          </div>
+        </div>
+        <ScrollArea className="h-[600px] pr-4">
           <div
-            key={verse.number}
-            id={`selectBibleVerse-${verse.number}`}
-            className="flex items-start space-x-3"
+            className="space-y-4"
+            onMouseUp={handleSelect}
+            ref={bibleContainerRef}
           >
-            {selectedVerse && selectedVerse === verse.number ? (
-              <Popover open>
-                <PopoverAnchor>
-                  <span className="text-xl font-bold text-gray-700">
+            {verseData?.verses.map((verse) => (
+              <div
+                key={verse.number}
+                id={`selectBibleVerse-${verse.number}`}
+                className="flex items-start space-x-3"
+              >
+                {selectedVerse && selectedVerse === verse.number ? (
+                  <Popover open>
+                    <PopoverAnchor>
+                      <span className="text-2xl font-bold text-primary">
+                        {verse.number}
+                      </span>
+                    </PopoverAnchor>
+                    <PopoverContent>
+                      <Card>
+                        <CardContent className="p-4">
+                          <Paragraph>{verse.text}</Paragraph>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setSelectedVerse(undefined)}
+                            className="mt-2"
+                          >
+                            <MdClose className="h-4 w-4" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <span className="text-2xl font-bold text-primary">
                     {verse.number}
                   </span>
-                </PopoverAnchor>
-                <PopoverContent>
-                  <div className="px-4">
-                    <p>{verse.text}</p>
-                    <button
-                      onClick={() => setSelectedVerse(undefined)}
-                      className="rounded-md bg-white p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      <MdClose className="" />
-                    </button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <span className="text-xl font-bold text-gray-700">
-                {verse.number}
-              </span>
-            )}
-            <p className="text-lg leading-relaxed">{verse.text}</p>
+                )}
+                <Paragraph className="text-lg leading-relaxed">
+                  {verse.text}
+                </Paragraph>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="mt-8 flex justify-between">
-        <button
-          onClick={() => setChapter(chapter - 1)}
-          disabled={chapter <= 1}
-          className="rounded-lg bg-indigo-500 px-4 py-2 text-white disabled:bg-gray-400"
-        >
-          Previous Chapter
-        </button>
-        <button
-          onClick={() => setChapter(chapter + 1)}
-          disabled={chapter >= book.chapters}
-          className="rounded-lg bg-indigo-500 px-4 py-2 text-white disabled:bg-gray-400"
-        >
-          Next Chapter
-        </button>
-      </div>
-    </div>
+        </ScrollArea>
+        <div className="mt-6 flex justify-between">
+          <Button
+            onClick={() => setChapter(chapter - 1)}
+            disabled={chapter <= 1}
+            variant="outline"
+          >
+            Capítulo Anterior
+          </Button>
+          <Button
+            onClick={() => setChapter(chapter + 1)}
+            disabled={chapter >= book.chapters}
+          >
+            Próximo Capítulo
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
 const BibleContent = ({ books }: BibleContentProps) => {
-  console.log("books", books);
   const [book, setBook] = useState<Book | undefined>();
   const [bookSearch, setBookSearch] = useState<string>("");
+
   if (book) {
     return <BookContent setBook={setBook} book={book} books={books} />;
   }
+
   return (
-    <div className="h-[800px] space-y-2 overflow-auto p-4">
-      <h1 className="mb-4 text-2xl font-bold">Livros da biblia</h1>
-      <div className="">
-        <p>Buscar por nome ou sigla:</p>
-        <Input
-          value={bookSearch}
-          onChange={(e) => setBookSearch(e.target.value)}
-        />
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {books
-          .filter(
-            (book) =>
-              book.name.toLowerCase().includes(bookSearch.toLowerCase()) ||
-              book.abbrev.pt.includes(bookSearch.toLowerCase()),
-          )
-          .map((book) => (
-            <button
-              key={book.abbrev.en}
-              onClick={() => setBook(book)}
-              className="rounded-lg bg-white p-4 shadow-md transition-shadow duration-300 hover:shadow-lg"
-            >
-              <h2 className="text-xl font-semibold">{book.name}</h2>
-              <p className="text-gray-600">{book.author}</p>
-              <p className="text-gray-600">Chapters: {book.chapters}</p>
-            </button>
-          ))}
-      </div>
-    </div>
+    <Card className="mx-auto max-w-4xl">
+      <CardHeader>
+        <CardTitle className="text-center text-4xl font-bold text-primary">
+          Livros da Bíblia
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6">
+          <Label className="text-lg font-semibold text-secondary">
+            Buscar por nome ou sigla
+          </Label>
+          <div className="relative">
+            <Input
+              value={bookSearch}
+              onChange={(e) => setBookSearch(e.target.value)}
+              className="pl-10"
+              placeholder="Digite o nome ou sigla do livro..."
+            />
+            <MdSearch className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          </div>
+        </div>
+        <ScrollArea className="h-[600px]">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {books
+              .filter(
+                (book) =>
+                  book.name.toLowerCase().includes(bookSearch.toLowerCase()) ||
+                  book.abbrev.pt.includes(bookSearch.toLowerCase()),
+              )
+              .map((book) => (
+                <Button
+                  key={book.abbrev.en}
+                  onClick={() => setBook(book)}
+                  variant="outline"
+                  className="h-auto flex-col items-start p-4 text-left"
+                >
+                  <span className="text-lg font-semibold text-primary">
+                    {book.name}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {book.author}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    Capítulos: {book.chapters}
+                  </span>
+                </Button>
+              ))}
+          </div>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 };
+
 const Bible = () => {
   const { data: booksData, isLoading } = trpc.bibleBooks.useQuery();
+
   if (isLoading || !booksData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <span className="text-2xl font-semibold text-primary">
+          Carregando...
+        </span>
+      </div>
+    );
   }
+
   return <BibleContent books={booksData} />;
 };
 
