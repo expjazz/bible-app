@@ -35,14 +35,12 @@ const BookContent = ({
   const handleSelect = () => {
     const selected = window?.getSelection();
     if (!selected) return;
-    console.log("selected", selected?.toString());
     const currentVerse = verseData?.verses.find((verse) =>
       verse.text.includes(selected?.toString()),
     );
     setSelectedVerse(currentVerse?.number ? currentVerse?.number : undefined);
   };
 
-  console.log("verseData", selectedVerse, verseData);
   return (
     <div className="mx-auto h-[800px] max-w-3xl overflow-auto p-4">
       <div className="mb-8 text-center">
@@ -177,7 +175,6 @@ const BibleContent = ({ books }: BibleContentProps) => {
 };
 const Bible = () => {
   const { data: booksData, isLoading } = trpc.bibleBooks.useQuery();
-  console.log("booksData", booksData);
   if (isLoading || !booksData) {
     return <div>Loading...</div>;
   }
