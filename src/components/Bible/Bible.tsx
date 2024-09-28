@@ -54,9 +54,7 @@ const BookContent = ({
       <CardContent>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
-            <Label className="text-lg font-semibold text-secondary">
-              Livro
-            </Label>
+            <Label className="text-lg font-semibold">Livro</Label>
             <SimpleSelect
               options={books.map((book) => ({
                 label: book.name,
@@ -69,9 +67,7 @@ const BookContent = ({
             />
           </div>
           <div>
-            <Label className="text-lg font-semibold text-secondary">
-              Capítulo
-            </Label>
+            <Label className="text-lg font-semibold">Capítulo</Label>
             <SimpleSelect
               options={Array.from(
                 { length: book.chapters },
@@ -169,7 +165,7 @@ const BibleContent = ({ books }: BibleContentProps) => {
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <Label className="text-lg font-semibold text-secondary">
+          <Label className="text-lg font-semibold">
             Buscar por nome ou sigla
           </Label>
           <div className="relative">
