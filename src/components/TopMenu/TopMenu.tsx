@@ -27,7 +27,7 @@ import SignupForm from "../SignupForm";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { articleId } = useParams<{ articleId?: string }>();
   const { article, title } = useArticleStore((store) => store);
   console.log("article", article);
@@ -136,9 +136,9 @@ export function TopMenu() {
             <MenubarItem inset>Add Profile...</MenubarItem>
           </MenubarContent>
         </MenubarMenu>
-        <div className="w-[28%]" />
         {status !== "authenticated" ? (
           <>
+            <div className="w-[55%]" />
             <MenubarMenu>
               <MenubarTrigger>
                 <LoginForm />
