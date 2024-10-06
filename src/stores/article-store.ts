@@ -15,9 +15,9 @@ export type ArticleActions = {
 
 export type ArticleStore = ArticleState & ArticleActions
 
-const { title } = getLocalArticle();
+const { title, article } = getLocalArticle();
 export const initArticleStore = (): ArticleState => {
-  return { article: [], title: title ?? "" }
+  return { article: article ?? [], title: title ?? "" }
 }
 
 export const defaultInitState: ArticleState = {

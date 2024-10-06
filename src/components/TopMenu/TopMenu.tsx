@@ -54,7 +54,7 @@ export function TopMenu() {
       });
     }
   };
-
+  if (!session) return null;
   return (
     <>
       <ArticleDialog open={openArticles} setOpen={setOpenArticles} />

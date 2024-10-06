@@ -40,7 +40,7 @@ const SignupForm = () => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Paragraph>Crie sua conta</Paragraph>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

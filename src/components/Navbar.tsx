@@ -9,16 +9,7 @@ import LoginForm from "./LoginForm";
 const Navbar = () => {
   const { data: session, status } = useSession();
   console.log(session, status, "auth");
-  return (
-    <div className="flex">
-      {status !== "authenticated" ? (
-        <div className="flex">
-          <SignupForm />
-          <LoginForm />
-        </div>
-      ) : null}
-    </div>
-  );
+  return <div className="flex"></div>;
 };
 
 export default Navbar;
