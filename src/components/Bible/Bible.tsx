@@ -121,9 +121,7 @@ const BookContent = ({
                     {verse.number}
                   </span>
                 )}
-                <Paragraph className="text-lg leading-relaxed">
-                  {verse.text}
-                </Paragraph>
+                <Paragraph>{verse.text}</Paragraph>
               </div>
             ))}
           </div>

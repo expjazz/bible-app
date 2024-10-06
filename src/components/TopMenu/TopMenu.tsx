@@ -28,7 +28,6 @@ import { Prisma } from "@prisma/client";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
 import SaveDialog from "../SaveDialog";
-import { serialize } from "~/lib/utils";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
