@@ -16,6 +16,7 @@ import {
   MenubarTrigger,
 } from "~/components/ui/menubar";
 import { slateToHtml } from "@slate-serializers/html";
+import jsPDF from "jspdf";
 
 import ArticleDialog from "../ArticleDialog";
 import { useEffect, useState } from "react";
@@ -75,6 +76,30 @@ export function TopMenu() {
                 <MenubarItem
                   onClick={() => {
                     console.log(slateToHtml(article));
+                    const htmlContent = slateToHtml(article);
+                    const doc = new jsPDF({
+                      unit: "pt",
+                      format: "a4",
+                    });
+                    void doc.html(htmlContent, {
+                      callback: function (doc) {
+                        const pdfDataUri = doc.output("datauristring");
+                        const newWindow = window.open();
+                        if (newWindow) {
+                          newWindow.document.write(
+                            `<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`,
+                          );
+                        }
+                      },
+                      x: 40,
+                      y: 40,
+                      html2canvas: {
+                        scale: 0.7,
+                      },
+                      autoPaging: "text",
+                      width: 500, // Approximately A4 width in points
+                      windowWidth: 800, // Adjust based on your editor's width
+                    });
                   }}
                 >
                   PDF
