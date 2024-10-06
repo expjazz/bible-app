@@ -18,7 +18,6 @@ const ArticleDialog: React.FC<{
   open: boolean;
   setOpen: (open: boolean) => void;
 }> = ({ open, setOpen }) => {
-  console.log("inside modal");
   const { data: session } = useSession();
   const { data: articles } = trpc.getArticles.useQuery({
     userId: session?.user?.id ?? "",
