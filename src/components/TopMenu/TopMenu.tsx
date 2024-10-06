@@ -15,8 +15,10 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "~/components/ui/menubar";
+import { slateToHtml } from "@slate-serializers/html";
+
 import ArticleDialog from "../ArticleDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createArticle, updateArticle } from "~/app/actions";
 import { useArticleStore } from "~/stores/article-store-provider";
@@ -25,6 +27,7 @@ import { Prisma } from "@prisma/client";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
 import SaveDialog from "../SaveDialog";
+import { serialize } from "~/lib/utils";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
@@ -51,6 +54,7 @@ export function TopMenu() {
       });
     }
   };
+
   return (
     <>
       <ArticleDialog open={openArticles} setOpen={setOpenArticles} />
@@ -66,9 +70,15 @@ export function TopMenu() {
             <MenubarItem disabled>New Incognito Window</MenubarItem>
             <MenubarSeparator />
             <MenubarSub>
-              <MenubarSubTrigger>Share</MenubarSubTrigger>
+              <MenubarSubTrigger>Compartilhar</MenubarSubTrigger>
               <MenubarSubContent>
-                <MenubarItem>Email link</MenubarItem>
+                <MenubarItem
+                  onClick={() => {
+                    console.log(slateToHtml(article));
+                  }}
+                >
+                  PDF
+                </MenubarItem>
                 <MenubarItem>Messages</MenubarItem>
                 <MenubarItem>Notes</MenubarItem>
               </MenubarSubContent>

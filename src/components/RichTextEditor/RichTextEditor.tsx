@@ -61,7 +61,6 @@ const RichTextEditor: React.FC<{
     },
   ],
 }) => {
-  console.log("initialValue", initialValue);
   const { setArticle, setTitle, title } = useArticleStore((state) => state);
   const renderElement = useCallback(
     (props: LocalElementPops) => <Element {...props} />,

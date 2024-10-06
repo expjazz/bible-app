@@ -43,7 +43,6 @@ const LocalDockview = () => {
       const api: DockviewPanelApi = props.api;
       // const groupApi: DockviewGroupPanelApi  = props.group.api;
       const containerApi: DockviewApi = props.containerApi;
-      console.log("article here executed", article);
       return (
         <div>
           <RichTextEditor
