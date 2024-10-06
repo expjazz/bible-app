@@ -26,7 +26,6 @@ const LocalDockview = () => {
   const [article] = articleId
     ? trpc.getArticleById.useSuspenseQuery({ id: articleId })
     : [undefined];
-  console.log("article", article);
   const bibleCountRef = useRef(0);
   const dockviewRef = useRef<DockviewApi>();
   const components: Record<
@@ -44,14 +43,14 @@ const LocalDockview = () => {
       const api: DockviewPanelApi = props.api;
       // const groupApi: DockviewGroupPanelApi  = props.group.api;
       const containerApi: DockviewApi = props.containerApi;
-
+      console.log("article here executed", article);
       return (
         <div>
           <RichTextEditor
             initialValue={
-              // @ts-expect-error article.content is of type JsonValue
               article
-                ? (article.content as unknown as Descendant[])
+                ? // @ts-expect-error article.content is of type JsonValue
+                  (article.content as unknown as Descendant[])
                 : localStorageArticle
             }
             articleId={articleId}
@@ -62,6 +61,7 @@ const LocalDockview = () => {
   };
   function onReady(event: DockviewReadyEvent) {
     const api: DockviewApi = event.api;
+    console.log("article here", article);
     api.addPanel({
       id: "textEditor",
       component: "textEditor",

@@ -19,7 +19,7 @@ export default async function HomePage({
   return (
     <HydrateClient>
       <main className="flex h-full w-full flex-col bg-white text-black">
-        <div className="w-full">
+        <div className="flex w-full flex-col">
           <Suspense fallback={<div>Loading...</div>}>
             <LocalDockview />
           </Suspense>

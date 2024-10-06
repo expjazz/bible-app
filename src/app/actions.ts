@@ -2,6 +2,7 @@
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { signIn } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 import { prisma } from "~/server/db";
 
@@ -31,13 +32,14 @@ export async function createArticle({
   content: Prisma.InputJsonValue;
   userId: string;
 }) {
-  return prisma.article.create({
+  const article = await prisma.article.create({
     data: {
       title,
       content: content as Prisma.InputJsonValue,
       userId,
     },
   });
+  redirect(`/${article.id}`);
 }
 
 export async function updateArticle({
