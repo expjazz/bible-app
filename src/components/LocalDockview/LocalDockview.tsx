@@ -17,12 +17,16 @@ import { useParams } from "next/navigation";
 import { trpc } from "~/server/trpc/client";
 import { Descendant } from "slate";
 import { Button } from "../ui/button";
+import { getLocalArticle } from "~/lib/utils";
 const LocalDockview = () => {
   const [loading, setLoading] = useState(false);
   const { articleId } = useParams<{ articleId?: string }>();
+  const { article: localStorageArticle, title: localStorageTitle } =
+    getLocalArticle();
   const [article] = articleId
     ? trpc.getArticleById.useSuspenseQuery({ id: articleId })
     : [undefined];
+  console.log("article", article);
   const bibleCountRef = useRef(0);
   const dockviewRef = useRef<DockviewApi>();
   const components: Record<
@@ -46,7 +50,9 @@ const LocalDockview = () => {
           <RichTextEditor
             initialValue={
               // @ts-expect-error article.content is of type JsonValue
-              article ? (article.content as unknown as Descendant[]) : undefined
+              article
+                ? (article.content as unknown as Descendant[])
+                : localStorageArticle
             }
             articleId={articleId}
           />

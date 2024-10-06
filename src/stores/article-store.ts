@@ -2,6 +2,7 @@ import { createStore } from 'zustand/vanilla'
 import type {
   Descendant,
 } from "slate";
+import { getLocalArticle } from '~/lib/utils';
 export type ArticleState = {
   article: Descendant[],
   title: string,
@@ -14,8 +15,9 @@ export type ArticleActions = {
 
 export type ArticleStore = ArticleState & ArticleActions
 
+const { title } = getLocalArticle();
 export const initArticleStore = (): ArticleState => {
-  return { article: [], title: "" }
+  return { article: [], title: title ?? "" }
 }
 
 export const defaultInitState: ArticleState = {

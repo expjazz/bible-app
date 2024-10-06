@@ -46,6 +46,5 @@ export const useArticleStore = <T,>(
   if (!articleStoreContext) {
     throw new Error(`useArticleStore must be used within ArticleStoreProvider`);
   }
-  console.log("this is the store");
   return useStore(articleStoreContext, selector);
 };
