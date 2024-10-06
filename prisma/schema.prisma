@@ -14,12 +14,13 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  email    String    @unique
-  name     String?
-  password String
-  Note     Note[]
-  Article  Article[]
+  id          String        @id @default(cuid())
+  email       String        @unique
+  name        String?
+  password    String
+  Note        Note[]
+  Article     Article[]
+  PdfTemplate PdfTemplate[]
 }
 
 model Note {
@@ -31,9 +32,19 @@ model Note {
 }
 
 model Article {
-  id      String @id @default(cuid())
-  title   String
-  content Json
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  id          String        @id @default(cuid())
+  title       String
+  content     Json
+  userId      String
+  pdfTemplate PdfTemplate[]
+  user        User          @relation(fields: [userId], references: [id])
+}
+
+model PdfTemplate {
+  id        String  @id @default(cuid())
+  content   Json
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id])
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
 }

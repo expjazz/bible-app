@@ -17,17 +17,18 @@ import {
 } from "~/components/ui/menubar";
 import { slateToHtml } from "@slate-serializers/html";
 import jsPDF from "jspdf";
-
+import copy from "copy-to-clipboard";
 import ArticleDialog from "../ArticleDialog";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { createArticle, updateArticle } from "~/app/actions";
+import { createArticle, createPdfTemplate, updateArticle } from "~/app/actions";
 import { useArticleStore } from "~/stores/article-store-provider";
 import { useSession } from "next-auth/react";
 import { Prisma } from "@prisma/client";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
 import SaveDialog from "../SaveDialog";
+import { convertArticleToPdf } from "~/lib/utils";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
@@ -35,6 +36,17 @@ export function TopMenu() {
   const { articleId } = useParams<{ articleId?: string }>();
   const { article, title } = useArticleStore((store) => store);
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
+  const generatePdfLink = async () => {
+    const html = await convertArticleToPdf(article);
+    if (!html || !articleId || !session?.user.id) return;
+    const link = await createPdfTemplate({
+      content: html as unknown as Prisma.InputJsonValue,
+      articleId,
+      userId: session?.user.id,
+    });
+    copy(link.id);
+    console.log("this is an html", link);
+  };
   const saveArticle = async () => {
     if (!session) {
       setOpenSaveDialog(true);
@@ -54,7 +66,6 @@ export function TopMenu() {
       });
     }
   };
-  if (!session) return null;
   return (
     <>
       <ArticleDialog open={openArticles} setOpen={setOpenArticles} />
@@ -103,7 +114,9 @@ export function TopMenu() {
                 >
                   PDF
                 </MenubarItem>
-                <MenubarItem>Messages</MenubarItem>
+                <MenubarItem onClick={() => generatePdfLink()}>
+                  Compartilhar Link
+                </MenubarItem>
                 <MenubarItem>Notes</MenubarItem>
               </MenubarSubContent>
             </MenubarSub>

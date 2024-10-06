@@ -39,7 +39,7 @@ const LoginForm = () => {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Paragraph>Login</Paragraph>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

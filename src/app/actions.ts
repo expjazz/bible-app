@@ -59,3 +59,21 @@ export async function updateArticle({
     },
   });
 }
+
+export async function createPdfTemplate({
+  content,
+  articleId,
+  userId,
+}: {
+  content: Prisma.InputJsonValue;
+  articleId: string;
+  userId: string;
+}) {
+  return prisma.pdfTemplate.create({
+    data: {
+      content,
+      articleId,
+      userId,
+    },
+  });
+}

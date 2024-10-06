@@ -37,6 +37,7 @@
     "class-variance-authority": "^0.7.0",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
+    "copy-to-clipboard": "^3.3.3",
     "dockview": "^1.15.3",
     "drizzle-orm": "^0.30.10",
     "escape-html": "^1.0.3",

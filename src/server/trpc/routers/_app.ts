@@ -60,6 +60,17 @@ export const appRouter = createTRPCRouter({
     });
     return article;
   }),
+  getPdfTemplateById: baseProcedure.input(z.object({
+    id: z.string(),
+  })).query(async ({ input }) => {
+    const pdfTemplate = await prisma.pdfTemplate.findUnique({
+      where: {
+        id: input.id,
+      },
+    });
+    return pdfTemplate
+  }),
+
 });
 
 
