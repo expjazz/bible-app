@@ -38,13 +38,14 @@ export function TopMenu() {
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const generatePdfLink = async () => {
     const html = await convertArticleToPdf(article);
+    console.log("tesgting here eita", html, articleId, session?.user.id);
     if (!html || !articleId || !session?.user.id) return;
     const link = await createPdfTemplate({
       content: html as unknown as Prisma.InputJsonValue,
       articleId,
       userId: session?.user.id,
     });
-    copy(link.id);
+    copy(`${process.env.NEXT_PUBLIC_APP_URL}/pdf/${link.id}`);
     console.log("this is an html", link);
   };
   const saveArticle = async () => {
