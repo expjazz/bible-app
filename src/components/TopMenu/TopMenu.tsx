@@ -24,15 +24,17 @@ import { useSession } from "next-auth/react";
 import { Prisma } from "@prisma/client";
 import LoginForm from "../LoginForm";
 import SignupForm from "../SignupForm";
+import SaveDialog from "../SaveDialog";
 
 export function TopMenu() {
   const [openArticles, setOpenArticles] = useState(false);
   const { data: session, status } = useSession();
   const { articleId } = useParams<{ articleId?: string }>();
   const { article, title } = useArticleStore((store) => store);
-  console.log("article", article);
+  const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const saveArticle = async () => {
     if (!session) {
+      setOpenSaveDialog(true);
       return;
     }
     if (articleId) {
@@ -52,6 +54,7 @@ export function TopMenu() {
   return (
     <>
       <ArticleDialog open={openArticles} setOpen={setOpenArticles} />
+      <SaveDialog open={openSaveDialog} setOpen={setOpenSaveDialog} />
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>Arquivos</MenubarTrigger>
